@@ -25,7 +25,7 @@ function get_hwmondir()
 # $1 - hwmon basedir
 function print_core_clock_mhz()
 {
-   local propname=`cat $1/device/pp_dpm_sclk | grep -ia "*" | cut -d " " -f 2 | rev | cut -c 4- | rev`
+   local propname=`cat $1/device/pp_dpm_sclk | grep -m 1 -ia "*" | cut -d " " -f 2 | rev | cut -c 4- | rev`
    echo $propname
 }
 
@@ -33,7 +33,7 @@ function print_core_clock_mhz()
 # $1 - hwmon basedir
 function print_memory_clock_mhz()
 {
-   local propname=`cat $1/device/pp_dpm_mclk | grep -ia "*" | cut -d " " -f 2 | rev | cut -c 4- | rev`
+   local propname=`cat $1/device/pp_dpm_mclk | grep -m 1 -ia "*" | cut -d " " -f 2 | rev | cut -c 4- | rev`
    echo $propname
 }
 
@@ -82,6 +82,11 @@ function print_power_avg()
 # $1 - hwmon basedir
 function print_fanspeed_rpm()
 {
+   if [ ! -e "$1/fan1_input" ];then
+      echo "0"
+      return
+   fi
+
    local propname=`cat $1/fan1_input`
    local fan_usage=$(print_fan_usage_percent $hwmondir)
    
@@ -96,6 +101,11 @@ function print_fanspeed_rpm()
 # $1 - hwmon basedir
 function print_fan_usage_percent()
 {
+   if [ ! -e "$1/pwm1_max" ];then
+      echo "0"
+      return
+   fi
+
    local pwm_max=`cat $1/pwm1_max`
    # local pwm_min=`cat $1/pwm1_min`
    local pwm=`cat $1/pwm1`
@@ -115,6 +125,11 @@ function print_gpu_busy_percent()
 # $1 - hwmon basedir
 function print_mem_busy_percent()
 {
+   if [ ! -e "$1/device/mem_busy_percent" ];then
+      echo "0"
+      return
+   fi
+
    local propname=`cat $1/device/mem_busy_percent`
    echo $propname
 }
