@@ -146,7 +146,7 @@ function print_mem_usage_percent()
 function show_help()
 {
    echo "Print sensor information from amdgpu."
-   echo "Usage: amdgpu-sensor-info.sh [OPTIONS]"
+   echo "Usage: $(basename $0) [OPTIONS]"
    echo ""
    echo "-a print core clock in MHz (pp_dpm_sclk)"
    echo "-b print memory clock in MHz (pp_dpm_mclk)"
